@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Color Betting Game</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+h1{
+color:orange;
+}
+
+button{
+padding:12px 25px;
+margin:10px;
+font-size:18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.red{background:red;color:white;}
+.green{background:green;color:white;}
+.violet{background:purple;color:white;}
+
+.betbtn{
+background:orange;
+color:black;
+}
+
+#history{
+margin-top:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Color Betting Game</h1>
+
+<h2 id="balance">Balance: ₹1000</h2>
+
+<h2>Timer: <span id="timer">30</span></h2>
+
+<h3>Select Bet Amount</h3>
+
+<button class="betbtn" onclick="setBet(10)">₹10</button>
+<button class="betbtn" onclick="setBet(50)">₹50</button>
+<button class="betbtn" onclick="setBet(100)">₹100</button>
+
+<h3 id="bet"></h3>
+
+<h3>Choose Color</h3>
+
+<button class="red" onclick="setColor('Red')">Red</button>
+<button class="green" onclick="setColor('Green')">Green</button>
+<button class="violet" onclick="setColor('Violet')">Violet</button>
+
+<h2 id="result"></h2>
+
+<h3>Game History</h3>
+
+<div id="history"></div>
+
+<script>
+
+let balance = 1000;
+let betAmount = 0;
+let selectedColor = "";
+let timer = 30;
+
+function setBet(amount){
+betAmount = amount;
+document.getElementById("bet").innerHTML = "Bet Amount: ₹" + amount;
+}
+
+function setColor(color){
+selectedColor = color;
+document.getElementById("result").innerHTML = "Selected Color: " + color;
+}
+
+setInterval(function(){
+
+timer--;
+
+document.getElementById("timer").innerHTML = timer;
+
+if(timer == 0){
+
+timer = 30;
+
+let colors = ["Red","Green","Violet"];
+
+let result = colors[Math.floor(Math.random()*3)];
+
+if(selectedColor == result){
+
+balance += betAmount;
+
+document.getElementById("result").innerHTML =
+"Result: " + result + " | You Win ₹" + betAmount;
+
+}else{
+
+balance -= betAmount;
+
+document.getElementById("result").innerHTML =
+"Result: " + result + " | You Lose ₹" + betAmount;
+
+}
+
+document.getElementById("balance").innerHTML =
+"Balance: ₹" + balance;
+
+let history = document.getElementById("history");
+
+history.innerHTML =
+"<p>Result: "+result+"</p>" + history.innerHTML;
+
+}
+
+},1000);
+
+</script>
+
+</body>
+</html>
