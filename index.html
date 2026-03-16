@@ -4,12 +4,11 @@
 <title>Color Betting Game</title>
 
 <style>
-
 body{
-font-family: Arial;
-background:#111;
+background:black;
 color:white;
 text-align:center;
+font-family:Arial;
 }
 
 h1{
@@ -17,54 +16,49 @@ color:orange;
 }
 
 button{
-padding:12px 25px;
-margin:10px;
-font-size:18px;
+padding:10px 20px;
+margin:5px;
 border:none;
 border-radius:8px;
-cursor:pointer;
+font-size:16px;
 }
 
 .red{background:red;color:white;}
 .green{background:green;color:white;}
 .violet{background:purple;color:white;}
+.bet{background:orange;color:black;}
 
-.betbtn{
-background:orange;
-color:black;
-}
-
-#history{
-margin-top:20px;
+#history div{
+margin:5px;
+padding:5px;
+background:#222;
+border-radius:5px;
 }
 
 </style>
-
 </head>
 
 <body>
 
 <h1>Color Betting Game</h1>
 
-<h2 id="balance">Balance: ₹1000</h2>
+<h2>Balance: ₹<span id="balance">1000</span></h2>
 
 <h2>Timer: <span id="timer">30</span></h2>
 
 <h3>Select Bet Amount</h3>
 
-<button class="betbtn" onclick="setBet(10)">₹10</button>
-<button class="betbtn" onclick="setBet(50)">₹50</button>
-<button class="betbtn" onclick="setBet(100)">₹100</button>
-
-<h3 id="bet"></h3>
+<button class="bet" onclick="setBet(10)">₹10</button>
+<button class="bet" onclick="setBet(50)">₹50</button>
+<button class="bet" onclick="setBet(100)">₹100</button>
 
 <h3>Choose Color</h3>
 
-<button class="red" onclick="setColor('Red')">Red</button>
-<button class="green" onclick="setColor('Green')">Green</button>
-<button class="violet" onclick="setColor('Violet')">Violet</button>
+<button class="red" onclick="placeBet('red')">Red</button>
+<button class="green" onclick="placeBet('green')">Green</button>
+<button class="violet" onclick="placeBet('violet')">Violet</button>
 
-<h2 id="result"></h2>
+<h3 id="msg"></h3>
 
 <h3>Game History</h3>
 
@@ -74,57 +68,63 @@ margin-top:20px;
 
 let balance = 1000;
 let betAmount = 0;
-let selectedColor = "";
+let betColor = "";
 let timer = 30;
 
 function setBet(amount){
 betAmount = amount;
-document.getElementById("bet").innerHTML = "Bet Amount: ₹" + amount;
+document.getElementById("msg").innerText = "Bet Amount ₹"+amount;
 }
 
-function setColor(color){
-selectedColor = color;
-document.getElementById("result").innerHTML = "Selected Color: " + color;
+function placeBet(color){
+
+if(betAmount==0){
+alert("Select Bet Amount");
+return;
+}
+
+betColor = color;
+
+document.getElementById("msg").innerText =
+"Bet placed on "+color;
+
 }
 
 setInterval(function(){
 
 timer--;
+document.getElementById("timer").innerText = timer;
 
-document.getElementById("timer").innerHTML = timer;
+if(timer==0){
 
-if(timer == 0){
+timer=30;
 
-timer = 30;
+let colors=["red","green","violet"];
+let result=colors[Math.floor(Math.random()*3)];
 
-let colors = ["Red","Green","Violet"];
+let history=document.getElementById("history");
 
-let result = colors[Math.floor(Math.random()*3)];
+let div=document.createElement("div");
+div.innerText="Result: "+result;
+history.prepend(div);
 
-if(selectedColor == result){
+if(result==betColor){
 
-balance += betAmount;
+balance+=betAmount;
 
-document.getElementById("result").innerHTML =
-"Result: " + result + " | You Win ₹" + betAmount;
+document.getElementById("msg").innerText="🎉 You Win";
 
-}else{
+}else if(betColor!=""){
 
-balance -= betAmount;
+balance-=betAmount;
 
-document.getElementById("result").innerHTML =
-"Result: " + result + " | You Lose ₹" + betAmount;
+document.getElementById("msg").innerText="❌ You Lose";
 
 }
 
-document.getElementById("balance").innerHTML =
-"Balance: ₹" + balance;
+document.getElementById("balance").innerText=balance;
 
-let history = document.getElementById("history");
-
-history.innerHTML =
-"<p>Result: "+result+"</p>" + history.innerHTML;
-
+betColor="";
 }
 
 },1000);
